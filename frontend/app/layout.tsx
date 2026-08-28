@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { LibraryProvider } from "@/lib/library";
 import { Geist, Geist_Mono, Roboto_Condensed } from "next/font/google";
 import "./globals.css";
+import MainLayout from "@/components/MainLayout";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -29,8 +30,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         >
             <body className={robotoCondensed.className}>
                 <LibraryProvider>
-                    {children}
+                    <MainLayout>
+                        {children}
+                    </MainLayout>
                 </LibraryProvider>
+                
             </body>
         </html>
     );

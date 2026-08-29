@@ -3,14 +3,19 @@ node_modules/
 
 temp/
 
-# Environment varibales
-.env
-
+# Environment variables
 .env*
-
 !.env*.example
 
 dist/
 logs/
 *.log
 .DS_Store
+
+/src/generated/prisma
+
+# AI assistant / IDE config folders
+.agents/
+.windsurf/
+.claude/*
+!.claude/CLAUDE.md

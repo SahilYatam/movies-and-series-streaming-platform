@@ -9,6 +9,8 @@ import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import rateLimit from "express-rate-limit";
 import { errorHandler, notFoundHandler } from "./middlewares/globalErrorHandler.js";
+import { toNodeHandler } from "better-auth/node";
+import { auth } from "./lib/auth.js";
 
 export const app = express();
 
@@ -19,6 +21,7 @@ app.use(cors({
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
 }));
 app.use(morgan("dev"));
+app.all("/api/v1/auth/*", toNodeHandler(auth));
 app.use(express.json({ limit: "20kb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());

@@ -12,6 +12,9 @@ export type LibraryEntry = {
     status: ListStatus;
     progress: number; // 0-100
     updatedAt: number;
+
+    season?: number;
+    episode?: number;
 }
 
 type LibraryState = Record<string, LibraryEntry>;

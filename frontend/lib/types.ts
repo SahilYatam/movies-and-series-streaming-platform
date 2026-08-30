@@ -18,6 +18,9 @@ export type Title = {
     backdrop: StaticImageData; // For now it will be static images
     // backdrop: string; // Later it will be dynamic images that will come from backend
     hue: number;
+
+    season?: number;
+    episode?: number;
 }
 
 const backdrops = [hero1, hero2, hero3];
@@ -49,6 +52,8 @@ const raw: Array<Omit<Title, "backdrop" | "hue">> = [
     id: "aurora-keep",
     title: "Aurora Keep",
     kind: "series",
+    season: 2,
+    episode: 15,
     year: 2026,
     rating: 9.1,
     duration: "S1 · 8 episodes",
@@ -62,6 +67,8 @@ const raw: Array<Omit<Title, "backdrop" | "hue">> = [
     kind: "series",
     year: 2025,
     rating: 8.2,
+    season: 1,
+    episode: 12,
     duration: "S2 · 10 episodes",
     genres: ["Drama", "Mystery"],
     description:
@@ -93,6 +100,8 @@ const raw: Array<Omit<Title, "backdrop" | "hue">> = [
     id: "the-quiet-orbit",
     title: "The Quiet Orbit",
     kind: "series",
+    season: 1,
+    episode: 12,
     year: 2026,
     rating: 8.9,
     duration: "S1 · 6 episodes",
@@ -115,6 +124,8 @@ const raw: Array<Omit<Title, "backdrop" | "hue">> = [
     id: "salt-and-signal",
     title: "Salt & Signal",
     kind: "series",
+    season: 1,
+    episode: 8,
     year: 2024,
     rating: 8.5,
     duration: "S3 · 8 episodes",
@@ -148,6 +159,8 @@ const raw: Array<Omit<Title, "backdrop" | "hue">> = [
     id: "midnight-cartography",
     title: "Midnight Cartography",
     kind: "series",
+    season: 5,
+    episode: 12,
     year: 2025,
     rating: 8.3,
     duration: "S1 · 7 episodes",
@@ -170,6 +183,8 @@ const raw: Array<Omit<Title, "backdrop" | "hue">> = [
     id: "the-long-thaw",
     title: "The Long Thaw",
     kind: "series",
+    season: 1,
+    episode: 12,
     year: 2026,
     rating: 9.0,
     duration: "S1 · 9 episodes",

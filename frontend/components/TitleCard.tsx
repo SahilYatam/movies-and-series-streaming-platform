@@ -7,7 +7,7 @@ import { WatchlistMenu } from "./WatchlistMenu";
 export function TitleCard({title, progress}:{title: Title; progress?: number | undefined}){
     const href = title.kind === "movie" 
     ? `/watch/movie/${title.id}`
-    : `/tv/${title.id}`;
+    : `/watch/tv/${title.id}/${title.season}/${title.episode}`;
 
     return (
     <div className="group relative w-[168px] shrink-0">

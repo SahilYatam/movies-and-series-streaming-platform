@@ -53,7 +53,7 @@ export default function HistoryPage() {
                                 href={
                                     title.kind === "movie"
                                         ? `/watch/movie/${title.id}`
-                                        : `/tv/${title.id}`
+                                        : `/watch/tv/${title.id}/${entry.season}/${entry.episode}`
                                 }
                                 className="group flex items-center gap-4 rounded-2xl border border-border bg-surface p-3 transition-colors hover:bg-surface-2"
                             >

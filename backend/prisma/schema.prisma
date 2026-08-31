@@ -11,3 +11,98 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+enum TitleKind {
+    MOVIE
+    TV
+}
+
+model Title {
+    id                  Int @id @default(autoincrement())
+    tmdbId              Int    
+    kind                TitleKind
+
+    title               String
+    originalTitle       String?
+    overview            String?
+
+    posterPath          String?
+    backdropPath        String?
+
+    originalLanguage    String?
+
+    releaseDate         DateTime?
+    firstAirDate        DateTime?
+
+    rating              Float?
+    like                Int?
+
+    adult               Boolean @default(false)
+
+    createdAt           DateTime @default(now())
+    updatedAt           DateTime @updatedAt
+
+
+    genres              TitleGenre[]
+    seasons             Season[]
+
+    @@unique([tmdbId, kind])
+    @@index([title])
+}
+
+// Genre model
+model Genre {
+    id                  Int @id @default(autoincrement())
+    tmdbId              Int @unique
+    name                String
+    
+    titles              TitleGenre[]
+}
+
+// This is a many-to-many relationship:
+model TitleGenre {
+    titleId             Int
+    genreId             Int
+
+    title               Title @relation(fields: [titleId], references: [id], onDelete: Cascade)
+    genre               Genre @relation(fields: [genreId], references: [id], onDelete: Cascade)
+
+    @@id([titleId, genreId])
+}
+
+model Season {
+    id                  Int @id @default(autoincrement())
+
+    titleId             Int
+    tmdbId              Int
+
+    seasonNumber        Int
+    name                String?
+    overiew             String?
+    posterPath          String?
+
+    airDate             DateTime?
+
+    title               Title @relation(fields: [titleId], references: [id], onDelete: Cascade)
+    episodes            Episode[]
+    
+    @@unique([titleId, seasonNumber])
+}
+
+model Episode {
+    id                  Int @id @default(autoincrement())
+
+    seasonId            Int
+    tmdbId              Int
+
+    episodeNumber       Int
+    name                String
+    overiew             String?
+
+    stillPath           String?
+    airDate             DateTime?
+
+    season              Season @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+
+    @@unique([seasonId, episodeNumber])
+}

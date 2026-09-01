@@ -152,15 +152,15 @@ export default function Home() {
           items={titles.filter((title) => title.year >= 2025)}
         />
 
-        {/* Series */}
+        {/* Popular Series */}
         <TitleRow
-          heading="Series to binge"
+          heading="Series to Watch"
           items={titles.filter((title) => title.kind === "series")}
         />
 
-        {/* Critically Acclaimed */}
+        {/* Highly Rated */}
         <TitleRow
-          heading="Critically acclaimed"
+          heading="Highly Rated"
           items={titles.filter((title) => title.rating >= 8.2)}
         />
       </div>

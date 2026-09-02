@@ -46,6 +46,9 @@ model Title {
     genres              TitleGenre[]
     seasons             Season[]
 
+    watchlists          Watchlist[]
+    watchHistory        WatchHistory[]
+
     @@unique([tmdbId, kind])
     @@index([title])
 }
@@ -104,5 +107,43 @@ model Episode {
 
     season              Season @relation(fields: [seasonId], references: [id], onDelete: Cascade)
 
+    watchHistory        WatchHistory[]
+
     @@unique([seasonId, episodeNumber])
 }
+
+model Watchlist {
+    id                  Int @id @default(autoincrement())
+
+    userId              String
+    titleId             Int
+
+    createdAt           DateTime @default(now())
+
+    title               Title @relation(fields: [titleId], references: [id], onDelete: Cascade)
+
+    @@unique([userId, titleId])
+}
+
+model WatchHistory {
+    id                  Int @id @default(autoincrement())
+
+    userId              String
+    titleId             Int
+
+    episodeId           Int?
+
+    progress            Float?
+    duration            Float?
+
+    lastWatchedAT       DateTime @default(now())
+    createdAt           DateTime @default(now())
+    updatedAt           DateTime @updatedAt
+
+    title               Title @relation(fields: [titleId], references: [id], onDelete: Cascade)
+    episode             Episode? @relation(fields: [episodeId], references: [id], onDelete: Cascade)
+
+    @@index([userId])
+    @@index([titleId])
+}
+

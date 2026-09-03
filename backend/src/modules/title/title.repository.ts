@@ -24,6 +24,18 @@ const getTitleByTmdbId = async (
 
     return title
 }
+
+const getTmdbId = async(id: number): Promise<{ tmdbId: number } | null> => {
+    return await prisma.title.findUnique({
+        where: {
+            id,
+        },
+        select: {
+            tmdbId: true
+        }
+    });
+}
+
 /**
 an upsert operation is a database action that either updates an existing record if a match is found, or inserts a new record if it does not exist.
 
@@ -135,6 +147,7 @@ const searchTitles = async(
 export const titleRepo = {
     getTitleById,
     getTitleByTmdbId,
+    getTmdbId,
     upsertTitle,
     searchTitles,
 }

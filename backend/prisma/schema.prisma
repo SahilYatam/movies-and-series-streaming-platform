@@ -17,6 +17,12 @@ enum TitleKind {
     TV
 }
 
+enum WatchStatus {
+    planning
+    watching
+    completed
+}
+
 model Title {
     id                  Int @id @default(autoincrement())
     tmdbId              Int    
@@ -35,7 +41,6 @@ model Title {
     firstAirDate        DateTime?
 
     rating              Float?
-    like                Int?
 
     adult               Boolean @default(false)
 
@@ -117,6 +122,8 @@ model Watchlist {
 
     userId              String
     titleId             Int
+
+    status              WatchStatus?
 
     createdAt           DateTime @default(now())
 

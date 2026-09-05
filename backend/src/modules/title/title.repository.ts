@@ -1,40 +1,40 @@
-import { prisma } from "../../config/prisma.js"
-import { Prisma, Title, TitleKind } from "../../generated/prisma/client.js"
+import { prisma } from "../../config/prisma.js";
+import { Prisma, Title, TitleKind } from "../../generated/prisma/client.js";
 
-const getTitleById = async(id: number): Promise<Title | null> => {
+const getTitleById = async (id: number): Promise<Title | null> => {
     const title = await prisma.title.findUnique({
-        where: { id }
-    })
+        where: { id },
+    });
 
-    return title
-}
+    return title;
+};
 
 const getTitleByTmdbId = async (
     tmdbId: number,
-    kind: TitleKind
+    kind: TitleKind,
 ): Promise<Title | null> => {
     const title = await prisma.title.findUnique({
-        where: { 
+        where: {
             tmdbId_kind: {
                 tmdbId,
-                kind
-            }    
-        }
-    })
+                kind,
+            },
+        },
+    });
 
-    return title
-}
+    return title;
+};
 
-const getTmdbId = async(id: number): Promise<{ tmdbId: number } | null> => {
+const getTmdbId = async (id: number): Promise<{ tmdbId: number } | null> => {
     return await prisma.title.findUnique({
         where: {
             id,
         },
         select: {
-            tmdbId: true
-        }
+            tmdbId: true,
+        },
     });
-}
+};
 
 /**
 an upsert operation is a database action that either updates an existing record if a match is found, or inserts a new record if it does not exist.
@@ -86,13 +86,13 @@ HTTP request/response
 
 */
 
-const upsertTitle = async(data: Prisma.TitleCreateInput) => {
+const upsertTitle = async (data: Prisma.TitleCreateInput) => {
     return prisma.title.upsert({
         where: {
             tmdbId_kind: {
                 tmdbId: data.tmdbId,
-                kind: data.kind
-            }
+                kind: data.kind,
+            },
         },
 
         update: {
@@ -103,23 +103,20 @@ const upsertTitle = async(data: Prisma.TitleCreateInput) => {
             backdropPath: data.backdropPath,
             originalLanguage: data.originalLanguage,
             rating: data.rating,
-            adult: data.adult
+            adult: data.adult,
         },
 
-        create: data
-    })
-}
+        create: data,
+    });
+};
 
-const searchTitles = async(
-    query: string,
-    limit: number = 20
-) => {
+const searchTitles = async (query: string, limit: number = 20) => {
     const titles = await prisma.title.findMany({
         where: {
             title: {
                 contains: query,
-                mode: "insensitive"
-            }
+                mode: "insensitive",
+            },
         },
 
         select: {
@@ -134,15 +131,14 @@ const searchTitles = async(
         },
 
         orderBy: {
-            title: "asc"
+            title: "asc",
         },
 
-        take: limit
+        take: limit,
     });
 
     return titles;
-}
-
+};
 
 export const titleRepo = {
     getTitleById,
@@ -150,4 +146,4 @@ export const titleRepo = {
     getTmdbId,
     upsertTitle,
     searchTitles,
-}
+};

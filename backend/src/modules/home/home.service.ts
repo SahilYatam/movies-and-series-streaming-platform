@@ -1,8 +1,6 @@
-import { Prisma } from "../../generated/prisma/client.js";
 import { titleService } from "../title/title.service.js";
 import { normalizeTitle } from "../tmdb/tmdb.mapper.js";
 import { tmdbService } from "../tmdb/tmdb.service.js";
-import { TmdbPaginatedResponse } from "../tmdb/tmdb.types.js";
 
 const homePage = async () => {
     // 1. Get all home page related titles from TMDB
@@ -37,23 +35,23 @@ const homePage = async () => {
         topRatedTvTitles,
     ] = await Promise.all([
         Promise.all(
-            trendingData.map((title: Prisma.TitleCreateInput) => titleService.upsertTitle(title))
+            trendingData.map((title) => titleService.upsertTitle(title))
         ),
 
         Promise.all(
-            popularMoviesData.map((title: Prisma.TitleCreateInput) => titleService.upsertTitle(title))
+            popularMoviesData.map((title) => titleService.upsertTitle(title))
         ),
         
         Promise.all(
-            popularTvData.map((title: Prisma.TitleCreateInput) => titleService.upsertTitle(title))
+            popularTvData.map((title) => titleService.upsertTitle(title))
         ),
 
         Promise.all(
-            topRatedMoviesData.map((title:  Prisma.TitleCreateInput) => titleService.upsertTitle(title))
+            topRatedMoviesData.map((title) => titleService.upsertTitle(title))
         ),
 
         Promise.all(
-            topRatedTvData.map((title:  Prisma.TitleCreateInput) => titleService.upsertTitle(title))
+            topRatedTvData.map((title) => titleService.upsertTitle(title))
         ),
     ]);
 
@@ -82,7 +80,7 @@ const search = async(query: string) => {
 
     // 4. Store TMDB results in db 
     const savedTitles = await Promise.all(
-        titles.map((t: Prisma.TitleCreateInput) =>  titleService.upsertTitle(t))
+        titles.map((t) =>  titleService.upsertTitle(t))
     )
 
     return savedTitles;

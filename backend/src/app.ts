@@ -47,6 +47,17 @@ function limiter(windowMs: number, max: number) {
 const globalRateLimiting = limiter(15 * 60 * 1000, 1000); // 15 minutes, 1000 requests
 app.use(globalRateLimiting);
 
+import homeRouter from "../src/modules/home/home.routes.js"
+import titleRouter from "../src/modules/title/title.route.js"
+import watchlistRouter from "../src/modules/watchlist/watchlist.routes.js"
+// import watchHistoryRouter from "../src/modules/watchHistory/watchhistory.routes.js"
+
+app.use("/home", homeRouter)
+app.use("/title", titleRouter)
+app.use("/watchlist", watchlistRouter)
+// app.use("/watchHistory", watchHistoryRouter)
+
+
 app.use(notFoundHandler);
 app.use(errorHandler);
 

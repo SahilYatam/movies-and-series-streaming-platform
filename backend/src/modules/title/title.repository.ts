@@ -140,10 +140,32 @@ const searchTitles = async (query: string, limit: number = 20) => {
     return titles;
 };
 
+const getTitleWithSeasonsAndEpisodes = async (id: number) => {
+    return prisma.title.findUnique({
+        where: { id },
+
+        include: {
+            seasons: {
+                orderBy: {
+                    seasonNumber: "asc",
+                },
+                include: {
+                    episodes: {
+                        orderBy: {
+                            episodeNumber: "asc",
+                        },
+                    },
+                },
+            },
+        },
+    });
+};
+
 export const titleRepo = {
     getTitleById,
     getTitleByTmdbId,
     getTmdbId,
     upsertTitle,
     searchTitles,
+    getTitleWithSeasonsAndEpisodes,
 };

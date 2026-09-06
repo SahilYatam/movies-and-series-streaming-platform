@@ -1,30 +1,31 @@
 import { Prisma } from "../../generated/prisma/client.js";
 import { TitleKind } from "../../generated/prisma/enums.js";
 import { ApiError } from "../../shared/index.js";
+import { tvService } from "../tv/tv.service.js";
 import { titleRepo } from "./title.repository.js";
 
-const getTitleById = async(id: number) => {
+const getTitleById = async (id: number) => {
     const title = await titleRepo.getTitleById(id);
-    if(!title){
+    if (!title) {
         throw new ApiError(404, "Title not found");
     }
 
-    return title
-}
+    return title;
+};
 
-const getTitleByTmdbId = async(tmdbId: number, kind: TitleKind) => {
-    const title = await titleRepo.getTitleByTmdbId(tmdbId, kind)
+const getTitleByTmdbId = async (tmdbId: number, kind: TitleKind) => {
+    const title = await titleRepo.getTitleByTmdbId(tmdbId, kind);
 
-    if(!title){
+    if (!title) {
         throw new ApiError(404, "Title not found");
     }
 
-    return title
-}
+    return title;
+};
 
-const upsertTitle = async(data: Prisma.TitleCreateInput) => {
-    return titleRepo.upsertTitle(data)
-}
+const upsertTitle = async (data: Prisma.TitleCreateInput) => {
+    return titleRepo.upsertTitle(data);
+};
 
 const searchTitles = async (query: string) => {
     const q = query.trim();
@@ -32,10 +33,26 @@ const searchTitles = async (query: string) => {
     return titleRepo.searchTitles(q);
 };
 
+const getTitleDetails = async (id: number) => {
+    const title = await titleRepo.getTitleById(id);
+
+    if (!title) {
+        throw new ApiError(404, "Title not found");
+    }
+
+    if (title.kind === "tv") {
+        await tvService.ensureTvMetadata(title.id, title.tmdbId);
+
+        return titleRepo.getTitleWithSeasonsAndEpisodes(id);
+    }
+
+    return title;
+};
+
 export const titleService = {
     getTitleById,
     getTitleByTmdbId,
     upsertTitle,
-    searchTitles
-}
-
+    searchTitles,
+    getTitleDetails,
+};

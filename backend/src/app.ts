@@ -52,9 +52,9 @@ import titleRouter from "../src/modules/title/title.route.js"
 import watchlistRouter from "../src/modules/watchlist/watchlist.routes.js"
 // import watchHistoryRouter from "../src/modules/watchHistory/watchhistory.routes.js"
 
-app.use("/home", homeRouter)
-app.use("/title", titleRouter)
-app.use("/watchlist", watchlistRouter)
+app.use("/api/v1/home", homeRouter)
+app.use("/api/v1/title", titleRouter)
+app.use("/api/v1/watchlist", watchlistRouter)
 // app.use("/watchHistory", watchHistoryRouter)
 
 

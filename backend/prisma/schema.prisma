@@ -13,8 +13,8 @@ datasource db {
 }
 
 enum TitleKind {
-    MOVIE
-    TV
+    movie
+    tv
 }
 
 enum WatchStatus {
@@ -86,7 +86,7 @@ model Season {
 
     seasonNumber        Int
     name                String?
-    overiew             String?
+    overview            String?
     posterPath          String?
 
     airDate             DateTime?
@@ -105,7 +105,7 @@ model Episode {
 
     episodeNumber       Int
     name                String
-    overiew             String?
+    overview            String?
 
     stillPath           String?
     airDate             DateTime?
@@ -143,7 +143,7 @@ model WatchHistory {
     progress            Float?
     duration            Float?
 
-    lastWatchedAT       DateTime @default(now())
+    lastWatchedAt       DateTime @default(now())
     createdAt           DateTime @default(now())
     updatedAt           DateTime @updatedAt
 
@@ -151,6 +151,8 @@ model WatchHistory {
     episode             Episode? @relation(fields: [episodeId], references: [id], onDelete: Cascade)
 
     @@index([userId])
+    @@index([userId, lastWatchedAt])
     @@index([titleId])
+    @@index([episodeId])
 }
 

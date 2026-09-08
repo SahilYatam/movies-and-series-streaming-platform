@@ -23,8 +23,12 @@ interface TmdbTitle {
   adult: boolean;
 }
 // This function convert TMDB's data into application format
-export function normalizeTitle(data: TmdbTitle): Prisma.TitleCreateInput {
+export function normalizeTitle(data: TmdbTitle, kind?: "movie" | "tv",): Prisma.TitleCreateInput {
     const title = data.title ?? data.name;
+
+    const titleKind =
+        kind ??
+        (data.media_type === "movie" ? "movie" : "tv");
 
     if(!title){
         throw new Error(`TMDB title ${data.id} has no title/name`);
@@ -32,7 +36,7 @@ export function normalizeTitle(data: TmdbTitle): Prisma.TitleCreateInput {
 
     return {
         tmdbId: data.id,
-        kind: data.media_type === "movie" ? "MOVIE" : "TV",
+        kind:titleKind,
         title,
         originalTitle: data.original_title ?? data.original_name,
         overview: data.overview,

@@ -12,7 +12,15 @@ import { errorHandler, notFoundHandler } from "./middlewares/globalErrorHandler.
 import { toNodeHandler } from "better-auth/node";
 import { auth } from "./lib/auth.js";
 
+
+
 export const app = express();
+
+import homeRouter from "../src/modules/home/home.routes.js"
+import titleRouter from "../src/modules/title/title.route.js"
+import watchlistRouter from "../src/modules/watchlist/watchlist.routes.js"
+// import watchHistoryRouter from "../src/modules/watchHistory/watchhistory.routes.js"
+
 
 app.use(helmet());
 app.use(cors({
@@ -21,7 +29,7 @@ app.use(cors({
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
 }));
 app.use(morgan("dev"));
-app.all("/api/v1/auth/*", toNodeHandler(auth));
+app.all("/api/v1/auth/*splat", toNodeHandler(auth));
 app.use(express.json({ limit: "20kb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -47,11 +55,14 @@ function limiter(windowMs: number, max: number) {
 const globalRateLimiting = limiter(15 * 60 * 1000, 1000); // 15 minutes, 1000 requests
 app.use(globalRateLimiting);
 
-import homeRouter from "../src/modules/home/home.routes.js"
-import titleRouter from "../src/modules/title/title.route.js"
-import watchlistRouter from "../src/modules/watchlist/watchlist.routes.js"
-// import watchHistoryRouter from "../src/modules/watchHistory/watchhistory.routes.js"
+app.get("/api/v1/home-test", (req, res) => {
+    res.json({
+        success: true,
+        message: "Home route is reachable",
+    });
+});
 
+app.use("/api/v1/home", homeRouter);
 app.use("/api/v1/home", homeRouter)
 app.use("/api/v1/title", titleRouter)
 app.use("/api/v1/watchlist", watchlistRouter)

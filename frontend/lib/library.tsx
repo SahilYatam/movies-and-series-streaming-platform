@@ -5,7 +5,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import type { ReactNode } from "react";
 
 
-export type ListStatus = "planning" | "watching" | "completed";
+export type ListStatus = "planning" | "watching" | "completed" | "remove";
 
 export type LibraryEntry = {
     id: string;
@@ -138,6 +138,7 @@ export const statusLabel: Record<ListStatus, string> = {
   planning: "Planning",
   watching: "Watching",
   completed: "Completed",
+  remove: "Remove",
 };
 
 export function timeAgo(ts: number) {

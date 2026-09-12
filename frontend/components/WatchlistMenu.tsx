@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Check, Plus } from "lucide-react";
 import { statusLabel, useLibrary, type ListStatus } from "@/lib/library";
 
-const options: ListStatus[] = ["planning", "watching", "completed"];
+const options: ListStatus[] = ["planning", "watching", "completed", "remove"];
 
 export function WatchlistMenu({id, compact = false}: {id: string; compact?: boolean}){
     const { get, setStatus, remove } = useLibrary();
@@ -12,7 +12,7 @@ export function WatchlistMenu({id, compact = false}: {id: string; compact?: bool
     const entry = get(id);
 
     return (
-        <div className="relative" onMouseLeave={() => setOpen(false)}>
+        <div className="relative" onClick={() => setOpen(false)}>
             <button
                 type="button"
                 onClick={() => setOpen((o) => !o)}
@@ -37,7 +37,7 @@ export function WatchlistMenu({id, compact = false}: {id: string; compact?: bool
                               setStatus(id, opt);
                               setOpen(false);  
                             }}
-                            className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-sm transition-colors hover:bg-surface-2"
+                            className={`flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-sm transition-colors hover:bg-surface-2 ${opt === "remove" && "bg-red-500"}`}
                         >
                             {statusLabel[opt]}
                             {entry?.status === opt && <Check className="size-4 text-primary" />}

@@ -1,48 +1,69 @@
-import type { Title } from "@/lib/types";
+import type { HomeTitle } from "@/lib/services/homeApi";
 
-export function MovieDetails({ title }: { title: Title }) {
+function getReleaseDate(title: HomeTitle) {
+    const date = title.releaseDate ?? title.firstAirDate;
+
+    if (!date) {
+        return "N/A";
+    }
+
+    return new Date(date).getFullYear();
+}
+
+export function MovieDetails({ title }: { title: HomeTitle }) {
     return (
         <aside className="space-y-3 rounded-2xl border border-border bg-surface p-4">
             <h2 className="text-xl">Details</h2>
+
             <dl className="space-y-2 text-sm">
                 <div className="flex justify-between gap-4">
                     <dt className="text-muted-foreground">
                         Release
                     </dt>
-                    <dd>{title.year}</dd>
+
+                    <dd>{getReleaseDate(title)}</dd>
                 </div>
 
                 <div className="flex justify-between gap-4">
                     <dt className="text-muted-foreground">
-                        Runtime
+                        Type
                     </dt>
-                    <dd>{title.duration}</dd>
-                </div>
 
-                <div className="flex justify-between gap-4">
-                    <dt className="text-muted-foreground">
-                        Genres
-                    </dt>
-                    <dd className="text-right">
-                        {title.genres.join(", ")}
+                    <dd className="capitalize">
+                        {title.kind}
                     </dd>
                 </div>
 
                 <div className="flex justify-between gap-4">
                     <dt className="text-muted-foreground">
-                        Audio
+                        Language
                     </dt>
-                    <dd>English · 5.1</dd>
+
+                    <dd className="uppercase">
+                        {title.originalLanguage ?? "N/A"}
+                    </dd>
                 </div>
 
                 <div className="flex justify-between gap-4">
                     <dt className="text-muted-foreground">
-                        Quality
+                        Rating
                     </dt>
-                    <dd>4K HDR</dd>
+
+                    <dd>
+                        {title.rating?.toFixed(1) ?? "N/A"}
+                    </dd>
+                </div>
+
+                <div className="flex justify-between gap-4">
+                    <dt className="text-muted-foreground">
+                        Adult
+                    </dt>
+
+                    <dd>
+                        {title.adult ? "Yes" : "No"}
+                    </dd>
                 </div>
             </dl>
         </aside>
-    )
+    );
 }
-

@@ -1,65 +1,41 @@
 "use client";
 
-import { Play } from "lucide-react";
-
-import type { Title } from "@/lib/types";
-import { posterStyle } from "@/lib/types";
-
-import { VidoeControls } from "./VideoControls";
-import Image from "next/image";
+import { getVidkingUrl } from "@/lib/videoPlayer/vidking";
+import type { HomeTitle } from "@/lib/services/homeApi";
 
 type VideoPlayerProps = {
-    title: Title;
-    progress: number;
-    playing: boolean;
-    onPlayingChange:(playing: boolean) => void;
-    onProgressChange:(progress: number) => void;
+    title: HomeTitle;
+    season?: number;
+    episode?: number;
 }
 
 export function VideoPlayer({
     title,
-    progress,
-    playing,
-    onPlayingChange,
-    onProgressChange
+    season,
+    episode,
 }: VideoPlayerProps) {
+    const playerUrl = getVidkingUrl(
+        title,
+        season,
+        episode
+    )
+
+    console.log("[video player] tmdbId:", title.tmdbId);
+    console.log("[video player] season/episode:", season, episode);
+    console.log("[video player] final iframe URL:", playerUrl);
+
     return (
         <div className="overflow-hidden rounded-2xl border border-border bg-black">
             <div
-                className="relative aspect-video"
-                style={posterStyle(title)}
+                className="aspect-video"
             >
-                <Image 
-                    src={title.backdrop} 
-                    alt="" 
-                    width={1920}
-                    height={1080}
-                    className="size-full object-cover opacity-70"
+                <iframe
+                    src={playerUrl}
+                    width="100%"
+                    height="100%"
+                    allowFullScreen
+                    className="size-full"
                 />
-
-                <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent" />
-
-                {!playing && (
-                    <button
-                        type="button"
-                        onClick={() => onPlayingChange(true)}
-                        aria-label="Play"
-                        className="absolute inset-0 grid place-items-center"
-                    >
-                        <span className="glow grid size-20 place-items-center rounded-full bg-primary text-primary-foreground">
-                        <Play className="size-8 fill-current" />
-                        </span>
-                    </button>
-                )}
-
-                <VidoeControls
-                    progress={progress}
-                    playing={playing}
-                    duration={title.duration}
-                    onPlayingChange={onPlayingChange}
-                    onProgressChange={onProgressChange}
-                />
-
             </div>
         </div>
     )

@@ -1,60 +1,77 @@
-import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+"use client";
 
-import { byId } from "@/lib/types";
+import { use } from "react";
+
 import { MediaWatchPage } from "@/components/watchPageComponents/index";
+import { useGetTitleDetailsQuery } from "@/lib/services/titleDetailsApi";
 
 type PageProps = {
     params: Promise<{
         id: string;
         season: string;
         episode: string;
-    }>
-}
+    }>;
+};
 
+export default function TVWatchPage({ params }: PageProps) {
+    const { id, season, episode } = use(params);
 
-export async function generateMetadata({
-    params
-}: PageProps): Promise<Metadata> {
-    const { id, season, episode } = await params;
+    const {
+        data: titleDetails,
+        isLoading,
+        isError,
+    } = useGetTitleDetailsQuery(id);
 
-    const title = byId(id);
-
-    if (!title) {
-        return {
-            title: "Unavailable — Sora",
-            robots: {
-                index: false
-            }
-        }
+    if (isLoading) {
+        return (
+            <div className="flex min-h-screen items-center justify-center">
+                Loading...
+            </div>
+        );
     }
 
-    return {
-        title: `${title.title} — S${season} E${episode} — Watch on Sora`,
-        description: title.description.slice(0, 155),
+    if (isError) {
+        return (
+            <div className="flex min-h-screen items-center justify-center">
+                Failed to load title details.
+            </div>
+        );
     }
-}
 
-
-export default async function TVWatchPage({
-    params
-}: PageProps) {
-    const { id, season, episode } = await params;
-
-    const title = byId(id);
-
-    if (!title) {
-        notFound();
+    if (!titleDetails) {
+        return (
+            <div className="flex min-h-screen items-center justify-center">
+                No title details data available.
+            </div>
+        );
     }
+
+    const seasonNumber = Number(season);
+    const episodeNumber = Number(episode);
+
+    let totalSeasons: number | undefined;
+    let totalEpisodes: number | undefined;
+
+    if (titleDetails.kind === "tv") {
+        totalSeasons = titleDetails.seasons.length;
+
+        const currentSeason = titleDetails.seasons.find(
+            (s) => s.seasonNumber === seasonNumber,
+        );
+        totalEpisodes = currentSeason?.episodes.length;
+    }
+
+    console.log("[TV Watch Page] id:", id);
+    console.log("[TV Watch Page] season:", season);
+    console.log("[TV Watch Page] episode:", episode);
 
     return (
         <MediaWatchPage
-            title={title}
-            season={Number(season)}
-            episode={Number(episode)}
+            title={titleDetails}
+            season={seasonNumber}
+            episode={episodeNumber}
+            totalSeasons={totalSeasons}
+            totalEpisodes={totalEpisodes}
         />
     );
-
 }
-
-

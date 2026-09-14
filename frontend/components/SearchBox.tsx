@@ -4,16 +4,30 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
 
-import { searchTitles } from "@/lib/types";
+import { useSearchTitlesQuery } from "@/lib/services/homeApi";
 
 export default function SearchBox() {
     const [query, setQuery] = useState("")
+    const [debouncedQuery, setDebouncedQuery] = useState("");
     const [open, setOpen] = useState(false)
 
     const router = useRouter();
     const boxRef = useRef<HTMLDivElement>(null);
 
-    const results = searchTitles(query);
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setDebouncedQuery(query.trim());
+        }, 400)
+
+        return () => clearTimeout(timer)
+    }, [query])
+
+    const {
+        data: results = [],
+        isFetching
+    } = useSearchTitlesQuery(debouncedQuery, {
+        skip: debouncedQuery.length < 2,
+    })
 
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => {
@@ -21,27 +35,39 @@ export default function SearchBox() {
                 boxRef.current &&
                 !boxRef.current.contains(e.target as Node)
             ) {
-                setOpen(false);
+                setOpen(false)
             }
         }
 
-        document.addEventListener("mousedown", handleClickOutside);
+        document.addEventListener("mousedown", handleClickOutside)
 
         return () => {
-            document.removeEventListener(
-                "mousedown",
-                handleClickOutside
-            )
+            document.removeEventListener("mousedown", handleClickOutside)
         }
     }, [])
 
-    const handleSelect = (id: string) => {
+    const handleSelect = (id: string, kind: "movie" | "tv") => {
         setOpen(false)
         setQuery("")
+        setDebouncedQuery("")
 
-        router.push(`/watch/${id}`)
+        router.push(
+            kind === "movie"
+                ? `/watch/movie/${id}`
+                : `/watch/tv/${id}`
+        );
     }
 
+    const getYear = (
+        releaseDate: string | null,
+        firstAirDate: string | null,
+    ) => {
+        const date = releaseDate ?? firstAirDate;
+
+        if (!date) return "N/A";
+
+        return new Date(date).getFullYear();
+    };
 
     return (
         <div
@@ -62,22 +88,44 @@ export default function SearchBox() {
                 className="w-full rounded-full border border-border bg-surface py-2 pl-9 pr-4 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-primary"
             />
 
-            {open && results.length > 0 && (
+            {open && debouncedQuery.length >= 2 && (
                 <div className="absolute z-40 mt-2 w-full overflow-hidden rounded-xl border border-border bg-popover p-1 shadow-2xl">
-                    {results.map((title) => (
-                        <button
-                            key={title.id}
-                            type="button"
-                            onClick={() => handleSelect(title.id)}
-                            className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-sm transition-colors hover:bg-surface-2"
-                        >
-                            <span>{title.title}</span>
+                    {isFetching && (
+                        <div className="px-3 py-3 text-sm text-muted-foreground">
+                            Searching...
+                        </div>
+                    )}
 
-                            <span className="text-xs uppercase tracking-wider text-muted-foreground">
-                                {title.kind} · {title.year}
-                            </span>
-                        </button>
-                    ))}
+                    {!isFetching && results.length === 0 && (
+                        <div className="px-3 py-3 text-sm text-muted-foreground">
+                            No titles found.
+                        </div>
+                    )}
+
+                    {!isFetching &&
+                        results.map((title) => (
+                            <button
+                                key={title.id}
+                                type="button"
+                                onClick={() =>
+                                    handleSelect(
+                                        title.id.toString(),
+                                        title.kind
+                                    )
+                                }
+                                className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-sm transition-colors hover:bg-surface-2"
+                            >
+                                <span>{title.title}</span>
+
+                                <span className="text-xs uppercase tracking-wider text-muted-foreground">
+                                    {title.kind} ·{" "}
+                                    {getYear(
+                                        title.releaseDate,
+                                        title.firstAirDate
+                                    )}
+                                </span>
+                            </button>
+                        ))}
                 </div>
             )}
         </div>

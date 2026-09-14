@@ -194,10 +194,10 @@ export default function Home() {
                 </section>
 
                 {/* Trending */}
-                <TitleRow
+                {/* <TitleRow
                     heading="Trending"
                     items={home?.trending}
-                />
+                /> */}
 
                 {/* Popular Movies */}
                 <TitleRow

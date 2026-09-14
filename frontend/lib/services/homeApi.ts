@@ -29,6 +29,24 @@ interface HomeResponse {
     success: boolean;
 }
 
+export interface SearchTitle {
+    id: number;
+    tmdbId: number;
+    kind: "movie" | "tv";
+    title: string;
+    posterPath: string | null;
+    releaseDate: string | null;
+    firstAirDate: string | null;
+    rating: number | null;
+}
+
+interface SearchResponse {
+    statusCode: number;
+    data: SearchTitle[];
+    message: string;
+    success: boolean;
+}
+
 export const homeApi = createApi({
     reducerPath: "homeApi",
 
@@ -42,7 +60,17 @@ export const homeApi = createApi({
             query: () => "/home",
             transformResponse: (response: HomeResponse) => response.data,
         }),
+
+        searchTitles: builder.query<SearchTitle[], string>({
+            query: (query) => ({
+                url: "/home/search",
+                params: {
+                    q: query,
+                },
+            }),
+            transformResponse: (response: SearchResponse) => response.data,
+        }),
     }),
 });
 
-export const { useGetHomeQuery } = homeApi;
+export const { useGetHomeQuery, useSearchTitlesQuery } = homeApi;

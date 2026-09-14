@@ -1,7 +1,14 @@
 import { redis } from "../../config/redis.js";
+import { Prisma } from "../../generated/prisma/client.js";
 import { titleService } from "../title/title.service.js";
 import { normalizeTitle } from "../tmdb/tmdb.mapper.js";
 import { tmdbService } from "../tmdb/tmdb.service.js";
+
+const saveTitles = (titles: Prisma.TitleCreateInput[]) => {
+    return Promise.all(
+        titles.map((title) => titleService.upsertTitle(title))
+    );
+};
 
 const homePage = async () => {
     const cacheKey = "home:page";
@@ -57,25 +64,11 @@ const homePage = async () => {
         topRatedMoviesTitles,
         topRatedTvTitles,
     ] = await Promise.all([
-        Promise.all(
-            trendingData.map((title) => titleService.upsertTitle(title)),
-        ),
-
-        Promise.all(
-            popularMoviesData.map((title) => titleService.upsertTitle(title)),
-        ),
-
-        Promise.all(
-            popularTvData.map((title) => titleService.upsertTitle(title)),
-        ),
-
-        Promise.all(
-            topRatedMoviesData.map((title) => titleService.upsertTitle(title)),
-        ),
-
-        Promise.all(
-            topRatedTvData.map((title) => titleService.upsertTitle(title)),
-        ),
+        saveTitles(trendingData),
+        saveTitles(popularMoviesData),
+        saveTitles(popularTvData),
+        saveTitles(topRatedMoviesData),
+        saveTitles(topRatedTvData),
     ]);
 
     // 5. Build the exact same response
@@ -91,21 +84,21 @@ const homePage = async () => {
     await redis.set(
         cacheKey,
         JSON.stringify(data),
-        {EX: 60 * 60} // 1 hour
+        { EX: 60 * 60 * 24 } // 24 hours
     )
     
     return data
 };
 
 const search = async (query: string) => {
-    query.trim();
+    const q = query.trim();
     // 1. First search the title in db
-    const dbTitles = await titleService.searchTitles(query);
+    const dbTitles = await titleService.searchTitles(q);
 
     if (dbTitles.length > 0) return dbTitles;
 
     // 2. If not found in db then search TMDB
-    const tmdbTitles = await tmdbService.searchTitles(query);
+    const tmdbTitles = await tmdbService.searchTitles(q);
 
     // 3. Convert TMDB data into application format
     const titles = tmdbTitles.map((title) => normalizeTitle(title));

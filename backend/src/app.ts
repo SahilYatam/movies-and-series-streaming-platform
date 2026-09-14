@@ -29,7 +29,7 @@ app.use(cors({
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
 }));
 app.use(morgan("dev"));
-app.all("/api/v1/auth/*splat", toNodeHandler(auth));
+app.all("/api/auth/*splat", toNodeHandler(auth));
 app.use(express.json({ limit: "20kb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -63,7 +63,6 @@ app.get("/api/v1/home-test", (req, res) => {
 });
 
 app.use("/api/v1/home", homeRouter);
-app.use("/api/v1/home", homeRouter)
 app.use("/api/v1/title", titleRouter)
 app.use("/api/v1/watchlist", watchlistRouter)
 // app.use("/watchHistory", watchHistoryRouter)

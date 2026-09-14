@@ -46,7 +46,7 @@ export default function ProfileNav() {
             <button
                 type="button"
                 onClick={() => setShowMenu((prev) => !prev)}
-                className="flex items-center gap-2 rounded-full border border-border py-1 pl-1 pr-3 transition-colors hover:bg-surface"
+                className="flex cursor-pointer items-center gap-2 rounded-full border border-border py-1 pl-1 pr-3 transition-colors hover:bg-surface"
                 aria-expanded={showMenu}
                 aria-haspopup="menu"
             >
@@ -67,7 +67,7 @@ export default function ProfileNav() {
                     <button
                         type="button"
                         onClick={handleLogout}
-                        className="w-full rounded-md px-3 py-2 text-left text-sm transition-colors hover:bg-surface"
+                        className="w-full bg-red-500 cursor-pointer rounded-md px-3 py-2 text-left text-sm transition-colors font-bold hover:bg-red-600"
                         role="menuitem"
                     >
                         Logout

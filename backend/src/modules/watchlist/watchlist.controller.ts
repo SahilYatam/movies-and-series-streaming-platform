@@ -4,7 +4,7 @@ import { watchlistService } from "./watchlist.service.js";
 import { WatchStatus } from "../../generated/prisma/enums.js";
 
 const getUserWatchlist = asyncHandler(async (req: Request, res: Response) => {
-    const { userId } = req.params;
+    const userId = req.session?.user.id;
 
     if (typeof userId !== "string") {
         throw new ApiError(400, "userId is required");

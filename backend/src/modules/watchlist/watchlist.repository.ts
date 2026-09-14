@@ -11,6 +11,12 @@ const getUserWatchlist = async(userId: string) => {
     return await prisma.watchlist.findMany({
         where: {
             userId
+        },
+        include: {
+            title: true
+        },
+        orderBy: {
+            createdAt: "desc"
         }
     })
 }

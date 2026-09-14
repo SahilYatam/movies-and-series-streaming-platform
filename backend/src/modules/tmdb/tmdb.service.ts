@@ -53,7 +53,7 @@ const searchTitles = async (title: string) => {
         "/search/multi",
         {
             params: {
-                title,
+                query: title
             },
         },
     );

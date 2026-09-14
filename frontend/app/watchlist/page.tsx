@@ -6,7 +6,7 @@ import { titles } from "@/lib/types";
 import Link from "next/link";
 import { useState } from "react";
 
-const tabs: ListStatus[] = ["planning", "watching", "completed"];
+const tabs: ListStatus[] = ["planning", "watching", "completed", "remove"];
 
 export default function WatchlistPage(){
     const {entries, get} = useLibrary();

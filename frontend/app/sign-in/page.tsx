@@ -4,16 +4,51 @@ import { AuthLayout, Divider } from "@/components/auth/AuthLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { authClient } from "@/lib/betterAuth/auth-client";
 import Link from "next/link";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import React, { useState } from "react";
 
 
-export default function SignIn(){
+export default function SignIn() {
+    const router = useRouter()
+
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
 
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
+
+    const handleSubmit = async (
+        e: React.FormEvent<HTMLFormElement>
+    ) => {
+        e.preventDefault();
+
+        setError("");
+        setLoading(true);
+
+        try {
+            const { error } = await authClient.signIn.email({
+                email,
+                password,
+            });
+
+            if (error) {
+                setError(error.message || "Invalid email or password.");
+                return;
+            }
+
+            const session = await authClient.getSession();
+
+            console.log("SESSION AFTER LOGIN:", session);
+
+            router.push("/");
+        } catch {
+            setError("Something went wrong. Please try again.");
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <AuthLayout
@@ -21,7 +56,7 @@ export default function SignIn(){
             subtitle="Sign in to continue watching"
             footer={
                 <>
-                     New to Sora?{" "}
+                    New to Sora?{" "}
                     <Link href="/sign-up" className="text-primary hover:underline">
                         Create an account
                     </Link>
@@ -30,7 +65,7 @@ export default function SignIn(){
         >
             {/* <Divider/> */}
 
-            <form className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
                     {error && (
                         <div className="rounded-md bg-destructive/15 p-3 text-sm text-destructive">
@@ -74,11 +109,11 @@ export default function SignIn(){
                         Forgot password?
                     </button>
                 </div>
-            
-            <Button type="submit" className="w-full rounded-lg py-2.5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90 bg-primary">
-                {loading ? "Logging in..." : "Sign In"}
-            </Button>
-                
+
+                <Button type="submit" className="w-full rounded-lg py-2.5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90 bg-primary">
+                    {loading ? "Logging in..." : "Sign In"}
+                </Button>
+
             </form>
 
         </AuthLayout>

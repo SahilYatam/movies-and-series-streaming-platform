@@ -22,7 +22,6 @@ export default async function Page({ params }: PageProps) {
     }
 
     const result = await response.json();
-    console.log("Movie title details result:", result)
 
     const title = result.data;
 

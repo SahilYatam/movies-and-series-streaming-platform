@@ -31,13 +31,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         >
             <body className={robotoCondensed.className}>
                 <LibraryProvider>
-                    <MainLayout>
-                        <StoreProvider>
+                    <StoreProvider>
+                        <MainLayout>
                             {children}
-                        </StoreProvider>
-                    </MainLayout>
+                        </MainLayout>
+                    </StoreProvider>
                 </LibraryProvider>
-                
+
             </body>
         </html>
     );

@@ -2,66 +2,109 @@
 
 import { useState } from "react";
 import { Check, Plus } from "lucide-react";
-import { statusLabel, useLibrary, type ListStatus } from "@/lib/library";
+import { statusLabel, type ListStatus } from "@/lib/library";
+
+import {
+    useGetUserWatchlistQuery,
+    useUpsertWatchlistMutation,
+    useDeleteWatchlistTitleMutation,
+} from "@/lib/services/watchlistApi";
+
 
 const options: ListStatus[] = ["planning", "watching", "completed", "remove"];
 
-export function WatchlistMenu({id, compact = false}: {id: string; compact?: boolean}){
-    const { get, setStatus, remove } = useLibrary();
+export function WatchlistMenu({ id, compact = false }: { id: string; compact?: boolean }) {
     const [open, setOpen] = useState(false);
-    const entry = get(id);
+
+    const { data: entries = [] } = useGetUserWatchlistQuery();
+
+    const [
+        upsertWatchlist,
+        { isLoading: isUpdating }
+    ] = useUpsertWatchlistMutation()
+
+    const [
+        deleteWatchlistTitle,
+        { isLoading: isDeleting },
+    ] = useDeleteWatchlistTitleMutation();
+
+    const titleId = Number(id);
+
+    const entry = entries.find((entry) => entry.titleId === titleId);
+
+    const isLoading = isUpdating || isDeleting;
+
+    const handleStatusChange = async (status: ListStatus) => {
+        if (status === "remove") {
+            await deleteWatchlistTitle(titleId)
+        } else {
+            await upsertWatchlist({
+                titleId,
+                status
+            })
+        }
+
+        setOpen(false)
+    }
 
     return (
-        <div className="relative" onClick={() => setOpen(false)}>
+        <div
+            className="relative"
+            onMouseLeave={() => setOpen(false)}
+        >
             <button
                 type="button"
-                onClick={() => setOpen((o) => !o)}
+                disabled={isLoading}
+                onMouseEnter={() => setOpen((o) => !o)}
                 className={
                     compact
-                    ? "grid size-8 place-items-center rounded-full bg-background/80 text-foreground transition-colors hover:bg-primary hover:text-primary-foreground"
-                    : "inline-flex items-center gap-2 rounded-full border border-border bg-surface px-4 py-2 text-sm font-medium transition-colors hover:bg-surface-2"
+                        ? "grid size-8 place-items-center rounded-full bg-background/80 text-foreground transition-colors hover:bg-primary hover:text-primary-foreground"
+                        : "inline-flex items-center gap-2 rounded-full border border-border bg-surface px-4 py-2 text-sm font-medium transition-colors hover:bg-surface-2"
                 }
                 aria-label="Add to watchlist"
             >
-                {entry ? <Check className="size-4"/> : <Plus className="size-4"/>}
-                {!compact && <span>{entry ? statusLabel[entry.status] : "Add to watchlist"}</span>}
+                {entry ? (
+                    <Check className="size-4" />
+                ) : (
+                    <Plus className="size-4" />
+                )}
+
+                {!compact && (
+                    <span>
+                        {entry?.status
+                            ? statusLabel[entry.status]
+                            : "Add to watchlist"}
+                    </span>
+                )}
             </button>
 
             {open && (
-                <div className="absolute left-0 z-30 mt-2 w-44 overflow-hidden rounded-xl border border-border bg-popover p-1 shadow-xl">
+                <div className="absolute left-0 z-30 mt-0 w-44 overflow-hidden rounded-xl border border-border bg-popover p-1 shadow-xl">
                     {options.map((opt) => (
                         <button
                             key={opt}
                             type="button"
-                            onClick={() => {
-                              setStatus(id, opt);
-                              setOpen(false);  
-                            }}
-                            className={`flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-sm transition-colors hover:bg-surface-2 ${opt === "remove" && "bg-red-500"}`}
+                            disabled={isLoading}
+                            onClick={() =>
+                                handleStatusChange(opt)
+                            }
+                            className={`flex w-full cursor-pointer items-center justify-between rounded-lg px-3 py-2 text-left text-sm transition-colors hover:bg-gray-800 ${opt === "remove"
+                                    ? "bg-red-500 hover:bg-red-600"
+                                    : ""
+                                }`}
                         >
                             {statusLabel[opt]}
-                            {entry?.status === opt && <Check className="size-4 text-primary" />}
+
+                            {entry?.status === opt && (
+                                <Check className="size-4 text-primary" />
+                            )}
                         </button>
                     ))}
-
-                    {entry && (
-                        <button
-                            type="button"
-                            onClick={() => {
-                                remove(id);
-                                setOpen(false);
-                            }}
-                            className="w-full rounded-lg px-3 py-2 text-left text-sm text-destructive transition-colors hover:bg-surface-2"
-                        >
-                            Remove
-                        </button>
-                    )}
                 </div>
             )}
-
         </div>
     )
 
-} 
+}
 
 

@@ -12,7 +12,7 @@ const homePage = async () => {
     const cacheKey = "home:page";
 
     // 1. Check redis
-    const cachedData = await redis.get(cacheKey);
+    const cachedData = await redis.get<string>(cacheKey);
 
     if (cachedData) {
         return JSON.parse(cachedData);
@@ -79,7 +79,7 @@ const homePage = async () => {
     await redis.set(
         cacheKey,
         JSON.stringify(data),
-        { EX: 60 * 60 * 24 }, // 24 hours
+        { ex: 60 * 60 * 24 }, // 24 hours
     );
 
     return data;

@@ -12,10 +12,10 @@ const homePage = async () => {
     const cacheKey = "home:page";
 
     // 1. Check redis
-    const cachedData = await redis.get<string>(cacheKey);
+    const cachedData = await redis.get(cacheKey);
 
     if (cachedData) {
-        return JSON.parse(cachedData);
+        return cachedData
     }
 
     // 2. Get all home page related titles from TMDB
@@ -78,7 +78,7 @@ const homePage = async () => {
     // 6. Store in Redis
     await redis.set(
         cacheKey,
-        JSON.stringify(data),
+        data,
         { ex: 60 * 60 * 24 }, // 24 hours
     );
 

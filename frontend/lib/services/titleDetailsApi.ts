@@ -62,8 +62,6 @@ export const titleDetailsApi = createApi({
     reducerPath: "titleDetailsApi",
 
     baseQuery: fetchBaseQuery({
-        // Trim any trailing slash(es) off the env var so combining it with
-        // an endpoint path (e.g. "/titles/8") never produces "//titles/8".
         baseUrl: process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, ""),
         credentials: "include",
     }),

@@ -46,10 +46,9 @@ interface SearchResponse {
     message: string;
     success: boolean;
 }
-
+console.log("API URL:", process.env.NEXT_PUBLIC_API_URL ? true : false)
 export const homeApi = createApi({
     reducerPath: "homeApi",
-
     baseQuery: fetchBaseQuery({
         baseUrl: process.env.NEXT_PUBLIC_API_URL,
         credentials: "include",

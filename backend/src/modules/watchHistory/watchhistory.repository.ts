@@ -13,6 +13,14 @@ const getUserAllWatchHistory = async (userId: string) => {
         where: {
             userId,
         },
+        include: {
+            title: true,
+            episode: {
+                include: {
+                    season: true,
+                },
+            },
+        },
         orderBy: {
             lastWatchedAt: "desc",
         },
@@ -71,15 +79,6 @@ const upsertWatchHistory = async ({
     });
 };
 
-const deleteOneWatchHistory = async (userId: string, titleId: number) => {
-    return await prisma.watchHistory.deleteMany({
-        where: {
-            userId,
-            titleId,
-        },
-    });
-};
-
 const clearWatchHistory = async (userId: string) => {
     return await prisma.watchHistory.deleteMany({
         where: {
@@ -88,10 +87,20 @@ const clearWatchHistory = async (userId: string) => {
     });
 };
 
+// const deleteOneWatchHistory = async (userId: string, titleId: number) => {
+//     return await prisma.watchHistory.deleteMany({
+//         where: {
+//             userId,
+//             titleId,
+//         },
+//     });
+// };
+
+
 export const watchHistoryRepo = {
     getUserAllWatchHistory,
     getUserOneWatchHistory,
     upsertWatchHistory,
-    deleteOneWatchHistory,
     clearWatchHistory,
+    // deleteOneWatchHistory,
 };

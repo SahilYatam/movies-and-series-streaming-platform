@@ -11,4 +11,6 @@ router.get("/:titleId", watchHistoryController.getUserOneWatchHistory)
 router.put("/:titleId", watchHistoryController.upsertWatchHistory)
 router.delete("/", watchHistoryController.clearWatchHistory)
 
+export default router
+
 

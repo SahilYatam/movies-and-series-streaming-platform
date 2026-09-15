@@ -21,24 +21,24 @@ const upsertWatchHistory = async (data: WatchHistoryProps) => {
     return await watchHistoryRepo.upsertWatchHistory(data);
 };
 
-const deleteOneWatchHistory = async (
-    userId: string,
-    titleId: number,
-) => {
-    return await watchHistoryRepo.deleteOneWatchHistory(
-        userId,
-        titleId,
-    );
-};
-
 const clearWatchHistory = async (userId: string) => {
     return await watchHistoryRepo.clearWatchHistory(userId);
 };
+
+// const deleteOneWatchHistory = async (
+//     userId: string,
+//     titleId: number,
+// ) => {
+//     return await watchHistoryRepo.deleteOneWatchHistory(
+//         userId,
+//         titleId,
+//     );
+// };
 
 export const watchHistoryService = {
     getUserAllWatchHistory,
     getUserOneWatchHistory,
     upsertWatchHistory,
-    deleteOneWatchHistory,
     clearWatchHistory,
+    // deleteOneWatchHistory,
 };

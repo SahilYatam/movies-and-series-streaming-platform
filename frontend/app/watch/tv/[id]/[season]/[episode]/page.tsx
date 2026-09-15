@@ -51,6 +51,7 @@ export default function TVWatchPage({ params }: PageProps) {
 
     let totalSeasons: number | undefined;
     let totalEpisodes: number | undefined;
+    let episodeId: number | undefined;
 
     if (titleDetails.kind === "tv") {
         totalSeasons = titleDetails.seasons.length;
@@ -59,6 +60,12 @@ export default function TVWatchPage({ params }: PageProps) {
             (s) => s.seasonNumber === seasonNumber,
         );
         totalEpisodes = currentSeason?.episodes.length;
+
+        const currentEpisode = currentSeason?.episodes.find(
+            (e) => e.episodeNumber === episodeNumber,
+        );
+
+        episodeId = currentEpisode?.id;
     }
 
     console.log("[TV Watch Page] id:", id);
@@ -70,6 +77,7 @@ export default function TVWatchPage({ params }: PageProps) {
             title={titleDetails}
             season={seasonNumber}
             episode={episodeNumber}
+            episodeId={episodeId}
             totalSeasons={totalSeasons}
             totalEpisodes={totalEpisodes}
         />

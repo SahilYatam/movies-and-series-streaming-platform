@@ -13,6 +13,7 @@ type MediaWatchPageProps = {
     title: TitleDetails;
     season?: number;
     episode?: number;
+    episodeId?: number;
     totalEpisodes?: number;
     totalSeasons?: number;
 };
@@ -21,6 +22,7 @@ export function MediaWatchPage({
     title,
     season,
     episode,
+    episodeId,
     totalEpisodes,
     totalSeasons,
 }: MediaWatchPageProps) {
@@ -33,7 +35,12 @@ export function MediaWatchPage({
 
     return (
         <div className="mx-auto max-w-6xl space-y-8 px-4 py-6 md:px-8">
-            <VideoPlayer title={title} season={season} episode={episode} />
+            <VideoPlayer
+                title={title}
+                season={season}
+                episode={episode}
+                episodeId={episodeId}
+            />
 
             <div className="grid gap-8 lg:grid-cols-[1fr_320px]">
                 <div className="space-y-5">

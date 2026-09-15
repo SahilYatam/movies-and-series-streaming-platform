@@ -114,31 +114,6 @@ const upsertWatchHistory = asyncHandler(async (req: Request, res: Response) => {
     );
 });
 
-const deleteOneWatchHistory = asyncHandler(
-    async (req: Request, res: Response) => {
-        const userId = req.session?.user.id;
-        const { titleId } = req.params;
-
-        if (!userId || typeof userId !== "string") {
-            throw new ApiError(400, "userId is required");
-        }
-
-        const parsedTitleId = Number(titleId);
-
-        if (!Number.isInteger(parsedTitleId)) {
-            throw new ApiError(400, "titleId must be a valid number");
-        }
-
-        const data = await watchHistoryService.deleteOneWatchHistory(
-            userId,
-            parsedTitleId,
-        );
-
-        return res.json(
-            new ApiResponse(200, data, "Watch history deleted successfully"),
-        );
-    },
-);
 
 const clearWatchHistory = asyncHandler(async (req: Request, res: Response) => {
     const userId = req.session?.user.id;
@@ -154,10 +129,36 @@ const clearWatchHistory = asyncHandler(async (req: Request, res: Response) => {
     );
 });
 
+// const deleteOneWatchHistory = asyncHandler(
+//     async (req: Request, res: Response) => {
+//         const userId = req.session?.user.id;
+//         const { titleId } = req.params;
+
+//         if (!userId || typeof userId !== "string") {
+//             throw new ApiError(400, "userId is required");
+//         }
+
+//         const parsedTitleId = Number(titleId);
+
+//         if (!Number.isInteger(parsedTitleId)) {
+//             throw new ApiError(400, "titleId must be a valid number");
+//         }
+
+//         const data = await watchHistoryService.deleteOneWatchHistory(
+//             userId,
+//             parsedTitleId,
+//         );
+
+//         return res.json(
+//             new ApiResponse(200, data, "Watch history deleted successfully"),
+//         );
+//     },
+// );
+
 export const watchHistoryController = {
     getUserAllWatchHistory,
     getUserOneWatchHistory,
     upsertWatchHistory,
-    deleteOneWatchHistory,
     clearWatchHistory,
+    // deleteOneWatchHistory,
 };

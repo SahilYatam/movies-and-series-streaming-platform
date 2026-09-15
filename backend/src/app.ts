@@ -19,7 +19,7 @@ export const app = express();
 import homeRouter from "../src/modules/home/home.routes.js"
 import titleRouter from "../src/modules/title/title.route.js"
 import watchlistRouter from "../src/modules/watchlist/watchlist.routes.js"
-// import watchHistoryRouter from "../src/modules/watchHistory/watchhistory.routes.js"
+import watchHistoryRouter from "../src/modules/watchHistory/watchhistory.routes.js"
 
 
 app.use(helmet());
@@ -65,7 +65,7 @@ app.get("/api/v1/home-test", (req, res) => {
 app.use("/api/v1/home", homeRouter);
 app.use("/api/v1/title", titleRouter)
 app.use("/api/v1/watchlist", watchlistRouter)
-// app.use("/watchHistory", watchHistoryRouter)
+app.use("/api/v1/watchHistory", watchHistoryRouter)
 
 
 app.use(notFoundHandler);

@@ -19,7 +19,7 @@ import { logger } from "./shared/index.js";
 console.log("SERVER: logger imported");
 
 import { connectDB } from "./config/db.js";
-import { connectRedis, redis } from "./config/redis.js";
+// import { connectRedis, redis } from "./config/redis.js";
 
 console.log("SERVER: db imported");
 
@@ -63,9 +63,9 @@ const gracefulShutdown = async (signal: string): Promise<void> => {
 
         logger.info("🔌 PostgreSQL connection closed");
 
-        await redis.quit()
+        // await redis.quit()
         
-        logger.info("🔌 Redis connection closed");
+        // logger.info("🔌 Redis connection closed");
 
         clearTimeout(shutdownTimer);
 
@@ -108,9 +108,9 @@ const startServer = async (): Promise<void> => {
 
         console.log("2. Database connected...");
 
-        await connectRedis()
+        // await connectRedis()
 
-        console.log("3. Redis connected...")
+        // console.log("3. Redis connected...")
 
         httpServer.listen(PORT, () => {
             console.log(`4. Server running on port ${PORT}`);

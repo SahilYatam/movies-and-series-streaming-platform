@@ -1,3 +1,5 @@
+// For local development
+/**
 import { createClient } from "redis"
 
 export const redis = createClient({
@@ -15,3 +17,11 @@ export const connectRedis = async(): Promise<void> => {
 
     console.log("Redis connected...");
 }
+*/
+
+import { Redis } from "@upstash/redis";
+
+export const redis = new Redis({
+    url: process.env.UPSTASH_REDIS_REST_URL!,
+    token: process.env.UPSTASH_REDIS_REST_TOKEN!,
+});

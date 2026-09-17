@@ -87,13 +87,20 @@ export function VideoPlayer({
     return (
         <div className="overflow-hidden rounded-2xl border border-border bg-black">
             <div className="aspect-video">
-                <iframe
+                {/* <iframe
                     ref={iframeRef}
                     src={playerUrl}
                     width="100%"
                     height="100%"
                     allowFullScreen
                     className="size-full"
+                /> */}
+
+                <iframe
+                    src={playerUrl}
+                    width="100%"
+                    height="100%"
+                    allowFullScreen
                 />
             </div>
         </div>

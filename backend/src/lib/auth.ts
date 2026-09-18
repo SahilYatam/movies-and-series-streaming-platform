@@ -18,13 +18,13 @@ export const auth = betterAuth({
     session: {
         cookieCache: { enabled: true, maxAge: 60 * 60 },
     },
-    // advanced: {
-    //     defaultCookieAttributes: {
-    //         sameSite: "none",
-    //         secure: true,
-    //         partitioned: true,
-    //     }
-    // }
+    advanced: {
+        defaultCookieAttributes: {
+            sameSite: "none",
+            secure: true,
+            partitioned: true,
+        }
+    }
 });
 
 export type Session = typeof auth.$Infer.Session;

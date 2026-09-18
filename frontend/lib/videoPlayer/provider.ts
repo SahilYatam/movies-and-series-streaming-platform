@@ -1,6 +1,6 @@
 import type { HomeTitle } from "@/lib/services/homeApi";
 
-export function getVidkingUrl(
+export function getVidlinkUrl(
     title: HomeTitle,
     season?: number,
     episode?: number,

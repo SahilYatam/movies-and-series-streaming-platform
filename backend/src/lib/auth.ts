@@ -4,16 +4,17 @@ import { prisma } from "../config/prisma.js";
 
 export const auth = betterAuth({
     baseURL: process.env.BETTER_AUTH_URL || "http://localhost:8015",
-    
+
     database: prismaAdapter(prisma, {
         provider: "postgresql",
     }),
     emailAndPassword: {
         enabled: true,
     },
-    trustedOrigins: [
-        process.env.CLIENT_URL || "http://localhost:3000",
-    ],
+    trustedOrigins:
+        process.env.NODE_ENV === "production"
+            ? [process.env.CLIENT_URL!]
+            : ["http://localhost:3000"],
     session: {
         cookieCache: { enabled: true, maxAge: 60 * 60 },
     },
@@ -27,4 +28,3 @@ export const auth = betterAuth({
 });
 
 export type Session = typeof auth.$Infer.Session;
-

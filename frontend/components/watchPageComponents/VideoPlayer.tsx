@@ -26,7 +26,7 @@ export function VideoPlayer({
 
     useEffect(() => {
         const handleMessage = async (event: MessageEvent) => {
-            
+
             // Only accept messages from vidlink
             if (event.origin !== process.env.NEXT_PUBLIC_VIDLINK_URL) {
                 return;
@@ -121,3 +121,28 @@ export function VideoPlayer({
         </div>
     );
 }
+
+/**
+ * [VidLink MEDIA_DATA] 
+Object
+data
+: 
+969681
+: 
+{id: 969681, type: 'movie', title: 'Spider-Man: Brand New Day', poster_path: '/bjiS5ipwxb9JFy3XRRN4OAilSeX.jpg', backdrop_path: '/qeQJx07rK2xm8SD2sJxFKhE7gs0.jpg', …}
+1108427
+: 
+{id: 1108427, type: 'movie', title: 'Moana', poster_path: '/gaet1xQ2nxrG0V1Ep9T20ZMNEIC.jpg', backdrop_path: '/c6BPbkO5Npt1OdwttAxCFo06wtH.jpg', …}
+1204680
+: 
+{id: 1204680, type: 'movie', title: 'Coyote vs. Acme', poster_path: '/kYDCl2y0VPvhT5eYWbMRInPoB03.jpg', backdrop_path: '/7GOW6jod9lLurW5utokAatxg7ql.jpg', …}
+[[Prototype]]
+: 
+Object
+type
+: 
+"MEDIA_DATA"
+[[Prototype]]
+: 
+Object
+ */

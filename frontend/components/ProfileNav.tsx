@@ -9,12 +9,14 @@ export default function ProfileNav() {
 
     const {
         data: session,
-        isPending
+        isPending,
+        error
     } = authClient.useSession()
 
 
     console.log("Session:", session);
     console.log("Pending:", isPending);
+    console.log("Session error:", error);
 
     if (isPending) {
         return null

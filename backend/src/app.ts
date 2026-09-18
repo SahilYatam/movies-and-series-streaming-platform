@@ -4,11 +4,7 @@ if (process.env.NODE_ENV !== "production") {
     dotenv.config();
 }
 
-import express, {
-    Request,
-    Response,
-    NextFunction,
-} from "express";
+import express, { Request, Response, NextFunction } from "express";
 
 import helmet from "helmet";
 import cors from "cors";
@@ -31,36 +27,30 @@ import watchHistoryRouter from "./modules/watchHistory/watchhistory.routes.js";
 
 export const app = express();
 
-app.use(
-    helmet(),
-);
+app.use(helmet());
 
 const allowedOrigins = [
-  "http://localhost:3000",
-  "https://movies-and-series-streaming-platfor-six.vercel.app",
+    "http://localhost:3000",
+    "https://movies-and-series-streaming-platfor-six.vercel.app",
 ];
-
 
 app.use(
     cors({
-        origin: allowedOrigins,
+        origin: (origin, callback) => {
+            if (!origin || allowedOrigins.includes(origin)) {
+                callback(null, true);
+            } else {
+                callback(new Error(`CORS blocked: ${origin}`));
+            }
+        },
         credentials: true,
-        methods: [
-            "GET",
-            "POST",
-            "PUT",
-            "PATCH",
-            "DELETE",
-        ],
+        methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     }),
 );
 
 app.use(morgan("dev"));
 
-app.all(
-    "/api/auth/*splat",
-    toNodeHandler(auth),
-);
+app.all("/api/auth/*splat", toNodeHandler(auth));
 
 app.use(
     express.json({
@@ -76,81 +66,44 @@ app.use(
 
 app.use(cookieParser());
 
-app.use(
-    (
-        req: Request,
-        res: Response,
-        next: NextFunction,
-    ) => {
-        res.setHeader(
-            "Cache-Control",
-            "no-store",
-        );
+app.use((req: Request, res: Response, next: NextFunction) => {
+    res.setHeader("Cache-Control", "no-store");
 
-        next();
-    },
-);
+    next();
+});
 
-app.get(
-    "/health",
-    (req: Request, res: Response) => {
-        return res
-            .status(200)
-            .json({ status: "OK" });
-    },
-);
+app.get("/health", (req: Request, res: Response) => {
+    return res.status(200).json({ status: "OK" });
+});
 
-function limiter(
-    windowMs: number,
-    max: number,
-) {
+function limiter(windowMs: number, max: number) {
     return rateLimit({
         windowMs,
         max,
-        message:
-            "Too many requests, please try again later.",
+        message: "Too many requests, please try again later.",
         standardHeaders: true,
         legacyHeaders: false,
     });
 }
 
-const globalRateLimiting = limiter(
-    15 * 60 * 1000,
-    1000,
-);
+const globalRateLimiting = limiter(15 * 60 * 1000, 1000);
 
 app.use(globalRateLimiting);
 
-app.get(
-    "/api/v1/home-test",
-    (req, res) => {
-        res.json({
-            success: true,
-            message:
-                "Home route is reachable",
-        });
-    },
-);
+app.get("/api/v1/home-test", (req, res) => {
+    res.json({
+        success: true,
+        message: "Home route is reachable",
+    });
+});
 
-app.use(
-    "/api/v1/home",
-    homeRouter,
-);
+app.use("/api/v1/home", homeRouter);
 
-app.use(
-    "/api/v1/title",
-    titleRouter,
-);
+app.use("/api/v1/title", titleRouter);
 
-app.use(
-    "/api/v1/watchlist",
-    watchlistRouter,
-);
+app.use("/api/v1/watchlist", watchlistRouter);
 
-app.use(
-    "/api/v1/watchHistory",
-    watchHistoryRouter,
-);
+app.use("/api/v1/watchHistory", watchHistoryRouter);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

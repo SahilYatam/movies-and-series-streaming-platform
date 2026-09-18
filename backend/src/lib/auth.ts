@@ -11,10 +11,10 @@ export const auth = betterAuth({
     emailAndPassword: {
         enabled: true,
     },
-    trustedOrigins:
-        process.env.NODE_ENV === "production"
-            ? [process.env.CLIENT_URL!]
-            : ["http://localhost:3000"],
+    trustedOrigins: [
+        process.env.CLIENT_URL!,
+        "http://localhost:3000",
+    ],
     session: {
         cookieCache: { enabled: true, maxAge: 60 * 60 },
     },

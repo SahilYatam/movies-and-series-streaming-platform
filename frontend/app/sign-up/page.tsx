@@ -103,7 +103,7 @@ export default function SignUp() {
                 </div>
 
                 <div className="space-y-2">
-                    <Label htmlFor="email" className="block">
+                    <Label htmlFor="password" className="block">
                         Password
                     </Label>
                     <Input

@@ -75,6 +75,12 @@ export default function Home() {
         );
     }
 
+    const heroWatchUrl =
+    hero.kind === "tv"
+        ? `/watch/tv/${hero.id}`
+        : `/watch/movie/${hero.id}`;
+
+
     return (
         <div className="pb-16">
             {/* Hero Section */}
@@ -130,7 +136,7 @@ export default function Home() {
                         {/* Actions */}
                         <div className="flex flex-wrap items-center gap-3 pt-1">
                             <Link
-                                href={`/watch/${hero.id}`}
+                                href={heroWatchUrl}
                                 className="glow inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-transform hover:scale-[1.03]"
                             >
                                 <Play className="size-4 fill-current" />

@@ -1,4 +1,5 @@
 /* eslint-disable react-hooks/set-state-in-effect */
+
 import {
     VideoPlayer,
     TitleInfo,
@@ -14,8 +15,6 @@ type MediaWatchPageProps = {
     season?: number;
     episode?: number;
     episodeId?: number;
-    totalEpisodes?: number;
-    totalSeasons?: number;
 };
 
 export function MediaWatchPage({
@@ -23,15 +22,11 @@ export function MediaWatchPage({
     season,
     episode,
     episodeId,
-    totalEpisodes,
-    totalSeasons,
 }: MediaWatchPageProps) {
     const isTv =
         title.kind === "tv" &&
         season !== undefined &&
-        episode !== undefined &&
-        totalEpisodes !== undefined &&
-        totalSeasons !== undefined;
+        episode !== undefined;
 
     return (
         <div className="mx-auto max-w-6xl space-y-8 px-4 py-6 md:px-8">
@@ -46,13 +41,12 @@ export function MediaWatchPage({
                 <div className="space-y-5">
                     <TitleInfo title={title} />
 
-                    {isTv && (
+                    {isTv && title.kind === "tv" && (
                         <EpisodeNavigation
                             seriesId={title.id.toString()}
                             season={season}
                             episode={episode}
-                            totalEpisodes={totalEpisodes}
-                            totalSeasons={totalSeasons}
+                            seasons={title.seasons}
                         />
                     )}
                 </div>
@@ -60,7 +54,7 @@ export function MediaWatchPage({
                 <MovieDetails title={title} />
             </div>
 
-            {/* For now removing suggestions, later when i add the suggestion API then implement this again */}
+            {/* For now removing suggestions, later when I add the suggestion API then implement this again */}
             {/* <TitleRow
                 heading="Suggested for you"
                 items={suggestions}

@@ -78,8 +78,6 @@ export default function TVWatchPage({ params }: PageProps) {
             season={seasonNumber}
             episode={episodeNumber}
             episodeId={episodeId}
-            totalSeasons={totalSeasons}
-            totalEpisodes={totalEpisodes}
         />
     );
 }
